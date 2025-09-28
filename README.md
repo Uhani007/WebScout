@@ -16,7 +16,9 @@ It supports **Web, Images, and Videos** search tabs with pagination and a clean 
 ---
 
 ## ⚙️ Installation
+
 Run the Flask app:
 python app.py
+
 Open your browser and visit:
 http://127.0.0.1:5000
