@@ -7,7 +7,6 @@ It aggregates results from multiple free sources (DuckDuckGo, Piped, etc.) and d
 🌐 Unified search across Web, Images, Videos, News, Forum
 🎨 Modern dark theme UI with Google-like layout
 🔍 Pagination like Google (1, 2, 3 … Next)
-🖼️ Images tab with proper thumbnails
 ▶️ Videos tab with playable YouTube links
 📰 News tab powered by Google News RSS
 💬 Forum tab powered by Reddit API
