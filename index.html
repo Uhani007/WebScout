@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WebScout Search</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.logo {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #a0a0a0;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-box input[type="text"] {
+  width: 60%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 25px 0 0 25px;
+  background: #1e1e1e;
+  color: #e0e0e0;
+  outline: none;
+}
+
+.search-box input[type="text"]:focus {
+  box-shadow: 0 0 8px #1a73e8;
+}
+
+.search-box button {
+  padding: 12px 20px;
+  background: #333;
+  border: none;
+  color: #e0e0e0;
+  font-size: 16px;
+  border-radius: 0 25px 25px 0;
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  background: #555;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs a {
+  padding: 10px 20px;
+  color: #ccc;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin: 0 5px;
+}
+
+.tabs a.active,
+.tabs a:hover {
+  color: #1a73e8;
+  border-bottom: 2px solid #1a73e8;
+}
+
+.results {
+  text-align: left;
+}
+
+.results a.title-link {
+  color: #1a73e8;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.results a.title-link:hover {
+  text-decoration: underline;
+}
+
+.results .url {
+  font-size: 14px;
+  color: #6a9955;
+  margin-bottom: 5px;
+}
+
+.results .snippet {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.results .result-item {
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.results .result-item:hover {
+  transform: scale(1.01);
+  background-color: #1a1a1a;
+}
+
+.results img.thumb {
+  max-width: 200px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+/* Video embed */
+.results iframe {
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* Pagination */
+.pagination {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.pagination a, .pagination span {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #1a73e8;
+  border-radius: 5px;
+}
+
+.pagination a:hover {
+  background: #1a73e8;
+  color: #fff;
+}
+
+.pagination span.active {
+  background: #1a73e8;
+  color: #fff;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1 class="logo">🌎 WebScout</h1>
+  <p class="subtitle">Meta Search Engine</p>
+
+  <form action="/" method="get" class="search-box">
+    <input type="hidden" name="type" value="{{ search_type }}">
+    <input type="text" name="query" value="{{ query }}" placeholder="Search or type URL..." required>
+    <button type="submit">🔍</button>
+  </form>
+
+  {% if query %}
+  <div class="tabs">
+    <a href="/?type=web&query={{ query }}" class="{{ 'active' if search_type=='web' else '' }}">Web</a>
+    <a href="/?type=images&query={{ query }}" class="{{ 'active' if search_type=='images' else '' }}">Images</a>
+    <a href="/?type=videos&query={{ query }}" class="{{ 'active' if search_type=='videos' else '' }}">Videos</a>
+    <a href="/?type=news&query={{ query }}" class="{{ 'active' if search_type=='news' else '' }}">News</a>
+    <a href="/?type=forum&query={{ query }}" class="{{ 'active' if search_type=='forum' else '' }}">Forum</a>
+  </div>
+  {% endif %}
+
+  {% if results %}
+  <div class="results">
+    {% for res in results %}
+    <div class="result-item">
+      <a class="title-link" href="{{ res['url'] }}" target="_blank">{{ res['title'] }}</a>
+      <div class="url">{{ res['url'] }}</div>
+      <div class="snippet">{{ res['snippet'] }}</div>
+
+      {# Image result #}
+      {% if res.get('thumbnail') and search_type == 'images' %}
+        <img class="thumb" src="{{ res['thumbnail'] }}" alt="{{ res['title'] }}">
+      {% endif %}
+
+      {# Video result #}
+      {% if search_type == 'videos' and res.get('video_id') %}
+        <iframe width="320" height="180"
+                src="https://www.youtube.com/embed/{{ res['video_id'] }}"
+                frameborder="0" allowfullscreen></iframe>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if total_results > per_page %}
+  <div class="pagination">
+    {% set total_pages = (total_results // per_page) + (1 if total_results % per_page > 0 else 0) %}
+    {% for p in range(1, total_pages+1) %}
+      {% if p == page %}
+        <span class="active">{{ p }}</span>
+      {% else %}
+        <a href="/?type={{ search_type }}&query={{ query }}&page={{ p }}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page < total_pages %}
+      <a href="/?type={{ search_type }}&query={{ query }}&page={{ page+1 }}">Next ›</a>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% endif %}
+</div>
+</body>
+</html>
+
