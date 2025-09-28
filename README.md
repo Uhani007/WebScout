@@ -1,3 +1,34 @@
+
+
+# WebScout 🌐
+
+WebScout is a dark-themed, Google-style meta search engine built with **Flask**.  
+It supports **Web, Images, and Videos** search tabs with pagination and a clean responsive UI.  
+
+---
+
+## 🔥 Features
+- 🌑 Dark theme with Google-like UI  
+- 🌍 Search across **Web**, **Images**, and **Videos**  
+- ▶️ YouTube links supported in Video tab  
+- 📑 Pagination for results navigation (1,2,3, Next...)  
+- ⚡ Built with **Python (Flask)**, HTML, CSS, JS  
+- 🪶 Lightweight & beginner-friendly  
+
+---
+
+## ⚙️ Installation
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/Uhani007/WebScout.git
+cd WebScout
+
+
+
+
+
+
 🌎 WebScout — Meta Search Engine
 
 WebScout is a Flask-based Meta Search Engine with a modern dark UI.
